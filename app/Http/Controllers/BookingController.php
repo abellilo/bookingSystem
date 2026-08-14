@@ -525,4 +525,96 @@ class BookingController extends Controller
 
         ]);
     }
+
+    public function myBookings()
+    {
+        $bookings = Booking::where('user_id', auth()->id())
+            ->with('payment')
+            ->orderBy('booking_date', 'desc')
+            ->orderBy('booking_time', 'desc')
+            ->get();
+
+        return view('booking.index', [
+            'bookings' => $bookings,
+        ]);
+    }
+
+    public function cancel($id)
+    {
+        $booking = Booking::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->with('payment')
+            ->firstOrFail();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Don't allow already cancelled bookings
+        |--------------------------------------------------------------------------
+        */
+
+        if ($booking->status === 'cancelled') {
+
+            return back()->withErrors([
+                'booking' => 'This booking has already been cancelled.'
+            ]);
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create the appointment date and time
+        |--------------------------------------------------------------------------
+        */
+
+        $appointmentDateTime = \Carbon\Carbon::createFromFormat(
+            'Y-m-d H:i',
+            $booking->booking_date->format('Y-m-d') . ' ' .
+            $booking->booking_time->format('H:i')
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Check the 24-hour cancellation rule
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            now()->greaterThanOrEqualTo(
+                $appointmentDateTime->copy()->subHours(24)
+            )
+        ) {
+
+            return back()->withErrors([
+                'booking' =>
+                    'Cancellation unavailable. Your appointment is less than 24 hours away. Please contact the store.'
+            ]);
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cancel booking
+        |--------------------------------------------------------------------------
+        */
+
+        $booking->update([
+            'status' => 'cancelled',
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Booking fee is retained
+        |--------------------------------------------------------------------------
+        */
+
+        return back()->with(
+            'success',
+            'Your booking has been cancelled. Your ₦100 booking fee has been retained.'
+        );
+    }
 }

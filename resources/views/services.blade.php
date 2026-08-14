@@ -244,7 +244,7 @@
                 <div class="service-image">
 
                     <img
-                        src="https://images.unsplash.com/photo-1605497788044-5a9f1f7e4c6e?auto=format&fit=crop&w=1000&q=85"
+                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=85"
                         alt="Hair braiding"
                     >
 
@@ -476,7 +476,7 @@
                 <div class="service-image">
 
                     <img
-                        src="https://images.unsplash.com/photo-1527799820374-dcf8f5e6a9b0?auto=format&fit=crop&w=1000&q=85"
+                        src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1000&q=85"
                         alt="Hair extensions"
                     >
 

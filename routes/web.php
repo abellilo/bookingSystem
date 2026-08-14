@@ -37,6 +37,14 @@ Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
     ->middleware(['auth', 'admin'])
     ->name('admin.dashboard');
 
+Route::get('/admin/bookings', [AdminController::class, 'bookings'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.bookings');
+
+Route::get('/admin/payments', [AdminController::class, 'payments'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.payments');
+
 Route::get('/services', function () {
     return view('services');
 })->name('services');
@@ -54,3 +62,11 @@ Route::post('/book', [BookingController::class, 'store'])
 Route::get('/payment/callback', [BookingController::class, 'callback'])
     ->middleware('auth')
     ->name('payment.callback');
+
+Route::get('/my-bookings', [BookingController::class, 'myBookings'])
+    ->middleware('auth')
+    ->name('bookings.index');
+
+Route::post('/my-bookings/{booking}/cancel', [BookingController::class, 'cancel'])
+    ->middleware('auth')
+    ->name('bookings.cancel');
