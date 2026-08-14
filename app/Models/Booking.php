@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Payment;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
@@ -18,12 +18,19 @@ class Booking extends Model
         'status',
     ];
 
-    public function user()
+    protected $casts = [
+        'booking_date' => 'date',
+        'booking_time' => 'datetime:H:i',
+        'service_price' => 'decimal:2',
+        'booking_fee' => 'decimal:2',
+    ];
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function payment()
+    public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
     }
